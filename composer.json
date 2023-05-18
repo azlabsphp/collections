@@ -1,0 +1,27 @@
+{
+    "name": "drewlabs/collections",
+    "description": "Containers & Streams API implementation",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Drewlabs\\Collections\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "azandrew-sidoine",
+            "email": "asmyns.platonnas29@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "drewlabs/core-helpers": "^0.2",
+        "drewlabs/overloadable": "^0.1.10",
+        "drewlabs/contracts": "^0.2.0"
+    }
+}
