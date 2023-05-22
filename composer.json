@@ -21,7 +21,6 @@
     "prefer-stable": true,
     "require": {
         "drewlabs/core-helpers": "^0.2",
-        "drewlabs/overloadable": "^0.1.10",
-        "drewlabs/contracts": "^0.2.0"
+        "drewlabs/overloadable": "^0.1.10"
     }
 }
