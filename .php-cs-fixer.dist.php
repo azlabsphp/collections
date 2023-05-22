@@ -3,7 +3,7 @@
 require __DIR__ . '/vendor/autoload.php';
 
 $header = <<<'HEADER'
-This file is part of the Drewlabs package.
+This file is part of the drewlabs namespace.
 
 (c) Sidoine Azandrew <azandrewdevelopper@gmail.com>
 

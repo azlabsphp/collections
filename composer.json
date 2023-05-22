@@ -18,9 +18,12 @@
         }
     ],
     "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "drewlabs/core-helpers": "^0.2",
         "drewlabs/overloadable": "^0.1.10"
-    }
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "prefer-stable": true
 }
