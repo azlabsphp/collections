@@ -44,6 +44,11 @@ class StreamInput
             \call_user_func($this->predicate, $this->value);
     }
 
+    /**
+     * @param mixed $source 
+     * @param bool $accepts 
+     * @return StreamInput 
+     */
     public static function wrap($source, $accepts = true)
     {
         return new self($source, $accepts);

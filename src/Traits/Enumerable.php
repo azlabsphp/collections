@@ -95,7 +95,7 @@ trait Enumerable
      */
     public static function empty()
     {
-        return new self([]);
+        return new static([]);
     }
 
     /**
@@ -554,6 +554,8 @@ trait Enumerable
     /**
      * Filter the items, removing any items that don't match the given type(s).
      *
+     * @param mixed ...$types
+     * 
      * @return static
      */
     public function whereInstanceOf(...$types)
@@ -639,7 +641,7 @@ trait Enumerable
     /**
      * Collect the values into a collection.
      *
-     * @return SimpleCollection
+     * @return Collection
      */
     public function collect()
     {
@@ -658,9 +660,9 @@ trait Enumerable
             static function ($value) {
                 if ($value instanceof \JsonSerializable) {
                     return $value->jsonSerialize();
-                } elseif (method_exists($value, 'toJson')) {
+                } elseif ((\is_object($value) || \is_string($value)) && method_exists($value, 'toJson')) {
                     return json_decode($value->toJson(), true);
-                } elseif (method_exists($value, 'toArray')) {
+                } elseif ((\is_object($value) || \is_string($value)) && method_exists($value, 'toArray')) {
                     return $value->toArray();
                 }
 

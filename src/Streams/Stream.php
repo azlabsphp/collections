@@ -79,10 +79,10 @@ class Stream implements \IteratorAggregate, StreamInterface, Arrayable
         return $this->collect(new ReduceCollector($reducer, $identity));
     }
 
-    public function filter(callable $callback, $preserveKey = false)
+    public function filter(callable $predicate, $preserveKey = false)
     {
-        $this->pipe[] = static function ($source) use ($callback) {
-            return Operator::create()(StreamInput::wrap($source->value, $callback($source->value)));
+        $this->pipe[] = static function ($source) use ($predicate) {
+            return Operator::create()(StreamInput::wrap($source->value, $predicate($source->value)));
         };
 
         return $this;

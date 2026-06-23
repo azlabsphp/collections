@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Drewlabs\Collections\Utils;
 
-class ValueResolver
+final class ValueResolver
 {
     /**
      * @var string|int|\Closure
@@ -33,17 +33,17 @@ class ValueResolver
     /**
      * Resolve the value from the provided parameter.
      *
-     * @param mixed $args
+     * @param mixed ...$args
      *
      * @return mixed
      */
-    public function __invoke($args)
+    public function __invoke(...$args)
     {
         $callback = !\is_string($this->keyOrFn) && \is_callable($this->keyOrFn) ? ($this->keyOrFn) : function ($arg) {
             return drewlabs_core_get($arg, $this->keyOrFn);
         };
 
-        return $callback($args);
+        return $callback(...$args);
     }
 
     /**
@@ -55,6 +55,6 @@ class ValueResolver
      */
     public static function new($keyOrFn)
     {
-        return new self($keyOrFn);
+        return new static($keyOrFn);
     }
 }

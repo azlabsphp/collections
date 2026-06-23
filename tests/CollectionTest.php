@@ -709,7 +709,7 @@ class CollectionTest extends TestCase
             'lang' => 'Salut!',
             'lang' => 'Hola!',
         ]))->intersectByKeys(new Collection([
-            'lang' => 'Hola!',
+            'lang' => 'Salut!',
         ]));
         $this->assertTrue(1 === $result->count());
     }
@@ -961,9 +961,6 @@ class CollectionTest extends TestCase
 
     public function testMapSpreadMethod()
     {
-        $result = (new Collection([1, 2, 3, 4]))->mapSpread(static function (...$values) {
-            return $values;
-        });
         $result = (new Collection([[1, 2, 3, 4], [5, 6, 7]]))->flatMap(static function ($value) {
             return array_map(static function ($value) {
                 return $value * 2;

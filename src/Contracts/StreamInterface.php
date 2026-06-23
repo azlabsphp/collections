@@ -37,6 +37,9 @@ interface StreamInterface extends Collectable, Enumerable
      * Set a reducer that should be applied to a stream data. If the identity value
      * is omitted, meaning if the only a single parameter is passed, the parameter is
      * consider to be the reducer function.
+     * 
+     * @template T
+     * @template R
      *
      * ```php
      *
@@ -57,7 +60,7 @@ interface StreamInterface extends Collectable, Enumerable
      * @param \Closure<R,T,R>|null $reducer
      * @param mixed|callable       $identity
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return mixed
      */

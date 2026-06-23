@@ -19,7 +19,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "drewlabs/core-helpers": "^0.3",
+        "drewlabs/core-helpers": "^0.3|^0.4",
         "drewlabs/overloadable": "^0.3"
     },
     "config": {

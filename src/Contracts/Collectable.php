@@ -17,10 +17,12 @@ interface Collectable
 {
     /**
      * Collect the output of the a given data structure.
+     * 
+     * @template T
      *
      * @param CollectorInterface|\Closure(\Traversable $source): T $collector
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return \Traversable|array|mixed
      */

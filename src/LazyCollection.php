@@ -18,20 +18,21 @@ use Drewlabs\Collections\Collectors\ReduceCollector;
 use Drewlabs\Collections\Contracts\Enumerable;
 use Drewlabs\Collections\Utils\DefaultValue;
 use Drewlabs\Collections\Utils\ValueResolver;
+use Drewlabs\Core\Helpers\DateTime;
 use Drewlabs\Core\Helpers\Functional;
-use Drewlabs\Core\Helpers\ImmutableDateTime;
 use Drewlabs\Core\Helpers\Iter;
+use InvalidArgumentException;
 use Iterator;
 
 class LazyCollection implements \IteratorAggregate, Enumerable
 {
     /**
-     * @var \Iterator|\iterable
+     * @var \Iterator|\Traversable
      */
     private $source;
 
     /**
-     * @param \iterable|\Iterator $values
+     * @param \Traversable|\Iterator $values
      *
      * @return self
      */
@@ -198,7 +199,7 @@ class LazyCollection implements \IteratorAggregate, Enumerable
     public function takeUntilTimeout(\DateTimeInterface $timeout)
     {
         return $this->takeWhile(static function () use ($timeout) {
-            return ImmutableDateTime::isfuture($timeout);
+            return DateTime::isfuture($timeout);
         });
     }
 
@@ -256,7 +257,7 @@ class LazyCollection implements \IteratorAggregate, Enumerable
     /**
      * Apply the transformation callback over each item element.
      *
-     * @param Closure|callable $callback
+     * @param \Closure|callable $callback
      *
      * @return self
      */
@@ -271,30 +272,38 @@ class LazyCollection implements \IteratorAggregate, Enumerable
         return new static(Iter::map($this->getIterator(), $callback, $preserveKey));
     }
 
-    public function filter($callback, $preserveKey = true)
+    /**
+     * returns an iterator removing any value that does not match the predicate
+     * 
+     * @param mixed $predicate 
+     * @param bool $preserveKey 
+     * @return Enumerable 
+     * @throws InvalidArgumentException 
+     */
+    public function filter($predicate, $preserveKey = true)
     {
-        if (!($callback instanceof \Closure) || !\is_callable($callback)) {
+        if (!($predicate instanceof \Closure) || !\is_callable($predicate)) {
             throw new \InvalidArgumentException(
-                'Expect parameter 1 to be an instance of \Closure, or php callable, got : '.\gettype($callback)
+                'Expect parameter 1 to be an instance of \Closure, or php callable, got : '.\gettype($predicate)
             );
         }
 
-        return new static(Iter::map($this->getIterator(), $callback, $preserveKey));
+        return new static(Iter::map($this->getIterator(), $predicate, $preserveKey));
     }
 
     public function first($value = null, $default = null)
     {
         if (null === $value) {
-            foreach ($this->getIterator() as $value) {
-                return $value;
+            foreach ($this->getIterator() as $v) {
+                return $v;
             }
         }
         $callback = !\is_string($value) && \is_callable($value) ? $value : (static function ($item) use ($value) {
             return $item === $value;
         });
-        foreach ($this->getIterator() as $key => $value) {
-            if ($callback($value, $key)) {
-                return $value;
+        foreach ($this->getIterator() as $key => $v) {
+            if ($callback($v, $key)) {
+                return $v;
             }
         }
 

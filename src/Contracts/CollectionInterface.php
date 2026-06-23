@@ -18,6 +18,8 @@ interface CollectionInterface extends Enumerable
     /**
      * Add an item to the collection based on key or value.
      *
+     * @param mixed ...$args
+     * 
      * @return self
      */
     public function add(...$args);
@@ -32,12 +34,16 @@ interface CollectionInterface extends Enumerable
     /**
      * Get an item from the collection.
      *
+     * @param mixed ...$args
+     * 
      * @return mixed
      */
     public function get(...$args);
 
     /**
      * Remove an item from the collection instance.
+     * 
+     * @param mixed ...$args
      */
     public function remove(...$args): bool;
 
@@ -54,6 +60,8 @@ interface CollectionInterface extends Enumerable
 
     /**
      * Checks if the collection contains a specified key or value.
+     * 
+     * @param mixed ...$args
      */
     public function contains(...$args): bool;
 

@@ -48,6 +48,10 @@ class CompareValueFactory
         $this->value = $value;
     }
 
+    /**
+     * @param mixed $item 
+     * @return bool|null 
+     */
     public function __invoke($item)
     {
         $result = drewlabs_core_get($item, $this->key);

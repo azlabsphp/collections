@@ -13,22 +13,23 @@ declare(strict_types=1);
 
 namespace Drewlabs\Collections;
 
+/** @template T */
 class Node
 {
     /**
-     * @var mixed
+     * @var T
      */
     public $value;
 
     /**
-     * Pointer to the next node.
+     * pointer to the next node.
      *
      * @var self
      */
     public $next;
 
     /**
-     * Pointer to the previous node.
+     * pointer to the previous node.
      *
      * @var self
      */

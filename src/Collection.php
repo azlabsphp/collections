@@ -46,7 +46,7 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
     /**
      * Creates new class instance.
      *
-     * @param array|CollectionInterface|\iterable $items
+     * @param array|CollectionInterface|\Traversable $items
      *
      * @return mixed
      */
@@ -235,13 +235,13 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
     {
         return iterator_to_array((static function ($internal) {
             foreach ($internal as $key => $value) {
-                yield $key => method_exists($value, 'toArray') ? $value->toArray() : $value;
+                yield $key => is_object($value) && method_exists($value, 'toArray') ? $value->toArray() : $value;
             }
         })($this->all()));
     }
 
     /**
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      *
      * @return void
@@ -264,13 +264,10 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
     public function map(callable $callback, $preserveKey = true)
     {
         if (!($callback instanceof \Closure) || !\is_callable($callback)) {
-            throw new \InvalidArgumentException('Expect parameter 1 to be an instance of \Closure, or php callable, got : '.\gettype($callback));
+            throw new \InvalidArgumentException('Expect parameter 1 to be an instance of \Closure, or php callable, got : ' . \gettype($callback));
         }
 
-        return new static(
-            $preserveKey ? array_combine(iterator_to_array($this->keys), iterator_to_array(Iter::map($this->items, $callback, $preserveKey))) :
-                iterator_to_array(Iter::map($this->items, $callback, $preserveKey))
-        );
+        return new static($preserveKey ? array_combine(iterator_to_array($this->keys), iterator_to_array(Iter::map($this->items, $callback, $preserveKey))) : Iter::map($this->items, $callback, $preserveKey));
     }
 
     /**
@@ -324,9 +321,9 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
         $callback = !\is_string($value) && \is_callable($value) ? $value : (static function ($item) use ($value) {
             return $item === $value;
         });
-        foreach ($this->items as $key => $value) {
-            if ($callback($value, $key)) {
-                return $value;
+        foreach ($this->items as $key => $v) {
+            if ($callback($v, $key)) {
+                return $v;
             }
         }
 
@@ -884,7 +881,8 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
         if (null === $keys) {
             return new static($this);
         }
-        if (method_exists($keys, 'all')) {
+
+        if (is_object($keys) && method_exists($keys, 'all')) {
             $keys = $keys->all();
         }
         $keys = \is_array($keys) ? $keys : \func_get_args();
@@ -967,7 +965,7 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
         $collection = new static($this);
         $end = $collection->pop();
 
-        return $collection->implode($glue).$before_last.$end;
+        return $collection->implode($glue) . $before_last . $end;
     }
 
     /**
@@ -1232,7 +1230,8 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
         }
 
         return (new static([
-            $values->get($middle - 1), $values->get($middle),
+            $values->get($middle - 1),
+            $values->get($middle),
         ]))->average();
     }
 
@@ -1268,7 +1267,27 @@ final class Collection implements CollectionInterface, \ArrayAccess, \JsonSerial
      */
     public function collapse()
     {
-        return new static(Iter::collapse($this->all()));
+
+        // recursive collapse function
+        $collapse = function ($values) use (&$collapse) {
+            $result = [];
+
+            foreach ($values as $value) {
+                if ($value instanceof CollectionInterface) {
+                    $value = $value->all();
+                }
+
+                if (is_array($value)) {
+                    array_push($result, ...$collapse($value));
+                    continue;
+                }
+                array_push($result, $value);
+            }
+
+            return $result;
+        };
+
+        return new static($collapse($this->all()));
     }
 
     /**

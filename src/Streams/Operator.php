@@ -25,11 +25,15 @@ class Operator
      *
      * @param callable $callback
      */
-    public function __construct(callable $callback = null)
+    public function __construct(?callable $callback = null)
     {
         $this->callback = $callback;
     }
 
+    /**
+     * @param mixed $data 
+     * @return mixed 
+     */
     public function __invoke($data)
     {
         if ($accepts = (bool) $data->accepts()) {

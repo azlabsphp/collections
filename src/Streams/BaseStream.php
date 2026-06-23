@@ -17,18 +17,18 @@ use Drewlabs\Collections\Contracts\StreamInterface;
 use Drewlabs\Collections\Exceptions\ValueNotFoundException;
 use Drewlabs\Collections\Utils\CompareValueFactory;
 use Drewlabs\Collections\Utils\DefaultValue;
+use Drewlabs\Core\Helpers\DateTime;
 use Drewlabs\Core\Helpers\Functional;
-use Drewlabs\Core\Helpers\ImmutableDateTime;
 
 /**
- * @method StreamInterface map(\callable $project)
+ * @method StreamInterface map(\Closure $project)
  */
 trait BaseStream
 {
     /**
      * Transformation pipe in which each stream value is passed through.
      *
-     * @var array<Closure<>>
+     * @var array<\Closure>
      */
     private $pipe = [];
 
@@ -65,6 +65,7 @@ trait BaseStream
         return $this;
     }
 
+    /** @param mixed $value */
     public function takeUntil($value)
     {
         $this->infinite = false;
@@ -103,6 +104,7 @@ trait BaseStream
         return $this;
     }
 
+    /** @param mixed $value */
     public function takeWhile($value, $flexible = true)
     {
         $value = $this->isCallable($value) ? $value : static function ($data) use ($value) {
@@ -133,7 +135,7 @@ trait BaseStream
     public function takeUntilTimeout(\DateTimeInterface $timeout)
     {
         return $this->takeWhile(static function () use ($timeout) {
-            return ImmutableDateTime::isfuture($timeout);
+            return DateTime::isfuture($timeout);
         });
     }
 
@@ -203,8 +205,8 @@ trait BaseStream
             return $item === $value;
         });
         $composedFunc = Functional::compose(...$this->pipe);
-        foreach ($this->source as $value) {
-            $result = $composedFunc(StreamInput::wrap($value));
+        foreach ($this->source as $v) {
+            $result = $composedFunc(StreamInput::wrap($v));
             if ($result->accepts() && $predicate($result->value)) {
                 return $result->value;
             }
@@ -216,7 +218,8 @@ trait BaseStream
     public function firstOrFail($key = null, $operator = null, $value = null)
     {
         $filter = \func_num_args() > 1 ? CompareValueFactory::new(...\func_get_args()) : $key;
-        if (($item = $this->first($filter, $default = new DefaultValue())) === $default) {
+        $default = new DefaultValue();
+        if (($item = $this->first($filter, $default)) === $default) {
             throw new ValueNotFoundException($key);
         }
 
@@ -253,7 +256,7 @@ trait BaseStream
     /**
      * Throw error if the stream source is an unsafe stream source.
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return void
      */

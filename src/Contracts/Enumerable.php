@@ -39,7 +39,7 @@ interface Enumerable extends \IteratorAggregate
     /**
      * Loop through enumerable values and invoke $callback on each of them.
      *
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      *
      * @return void
@@ -62,7 +62,6 @@ interface Enumerable extends \IteratorAggregate
      * @param mixed $operator
      * @param mixed $value
      *
-     * @throws NotFoundException
      *
      * @return mixed
      */

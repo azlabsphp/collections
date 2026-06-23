@@ -15,15 +15,19 @@ namespace Drewlabs\Collections;
 
 use Drewlabs\Collections\Streams\Stream;
 
+
+/**
+ * @template T
+ */
 class ForwardList implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var Node
+     * @var Node<T>
      */
     private $root;
 
     /**
-     * @var Node
+     * @var Node<T>
      */
     private $tail;
 
@@ -57,6 +61,7 @@ class ForwardList implements \IteratorAggregate, \JsonSerializable
         return $out;
     }
 
+    /** @param mixed $value */
     public function push($value)
     {
         $node = new Node($value);
@@ -81,6 +86,7 @@ class ForwardList implements \IteratorAggregate, \JsonSerializable
         return $this->size;
     }
 
+    /** @return T */
     public function pop()
     {
         $value = $this->tail->value;
@@ -91,11 +97,13 @@ class ForwardList implements \IteratorAggregate, \JsonSerializable
         return $value;
     }
 
+    /** @return T|null */
     public function first()
     {
         return $this->root ? $this->root->value : null;
     }
 
+    /** @return T|null */
     public function last()
     {
         return $this->tail ? $this->tail->value : null;
@@ -103,8 +111,6 @@ class ForwardList implements \IteratorAggregate, \JsonSerializable
 
     public function clear()
     {
-        // We loop through all the node and set their pointer to
-        // null
         $current = $this->root;
         while (null !== $current) {
             $current->previous = null;
@@ -124,7 +130,7 @@ class ForwardList implements \IteratorAggregate, \JsonSerializable
 
     // region Miscellanous added as utility but do not use because O(n)=n
     /**
-     * Performs a sequential search on the list. It will run at O(n)=n if the item
+     * Performs a sequential search on the list. It will run at O(n)=n if item
      * is not in the list or near the end of the list. Prefer use of other data structure
      * from PHP 8 \Ds namespace that are optimized for such search.
      *
