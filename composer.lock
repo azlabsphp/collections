@@ -67,16 +67,16 @@
         },
         {
             "name": "drewlabs/core-helpers",
-            "version": "v0.4.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/azlabsphp/drewlabs-core-helpers.git",
-                "reference": "c3dc5ec7c5519f7025caa65cbe9405fec0013660"
+                "reference": "6dcd837234d1ee56cff4cb09ad1c71a8d521a90e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/c3dc5ec7c5519f7025caa65cbe9405fec0013660",
-                "reference": "c3dc5ec7c5519f7025caa65cbe9405fec0013660",
+                "url": "https://api.github.com/repos/azlabsphp/drewlabs-core-helpers/zipball/6dcd837234d1ee56cff4cb09ad1c71a8d521a90e",
+                "reference": "6dcd837234d1ee56cff4cb09ad1c71a8d521a90e",
                 "shasum": ""
             },
             "require": {
@@ -115,9 +115,9 @@
             "description": "Set of global function for handling utility task ranging from array, string and datetimes manipulations",
             "support": {
                 "issues": "https://github.com/azlabsphp/drewlabs-core-helpers/issues",
-                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.0"
+                "source": "https://github.com/azlabsphp/drewlabs-core-helpers/tree/v0.4.1"
             },
-            "time": "2026-06-23T15:59:09+00:00"
+            "time": "2026-06-23T19:09:09+00:00"
         },
         {
             "name": "drewlabs/overloadable",
